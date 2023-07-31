@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace DevIO.API.Controllers;
 
 [ApiController]
+[Route("[controller]")]
 public abstract class MainController : ControllerBase
 {
     private readonly INotificador _notificador;
@@ -62,7 +63,7 @@ public abstract class MainController : ControllerBase
         }
     }
 
-    private void NotificarErro(string errorMessage)
+    protected void NotificarErro(string errorMessage)
     {
         _notificador.Handle(new Notificacao(errorMessage));
     }

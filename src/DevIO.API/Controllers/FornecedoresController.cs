@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevIO.API.Controllers;
 
-[Route("[controller]")]
 public class FornecedoresController : MainController
 {
     private readonly IFornecedorService _fornecedorService;
