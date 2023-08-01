@@ -1,10 +1,12 @@
 using DevIO.Business.Intefaces;
 using DevIO.Business.Notificacoes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DevIO.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public abstract class MainController : ControllerBase

@@ -67,19 +67,23 @@ public class ProdutosController : MainController
         if (!ModelState.IsValid)
             return CustomResponse(ModelState);
 
-        var model = await ObterProduto(viewModel.Id);
+        if (!string.IsNullOrEmpty(viewModel.ImagemUpload))
+        {
+            var model = await ObterProduto(viewModel.Id);
 
-        if (!string.IsNullOrEmpty(model?.Imagem))
-            RemoverArquivo(model.Imagem);
+            if (!string.IsNullOrEmpty(model?.Imagem))
+                RemoverArquivo(model.Imagem);
 
-        var nome = $"{Guid.NewGuid()}_{viewModel.Imagem}";
+            var nome = $"{Guid.NewGuid()}_{viewModel.Imagem}";
 
-        if (!UploadArquivoAsync(viewModel.ImagemUpload, nome).Result)
-            return CustomResponse(viewModel);
+            if (!UploadArquivoAsync(viewModel.ImagemUpload, nome).Result)
+                return CustomResponse(viewModel);
 
-        viewModel.Imagem = nome;
+            viewModel.Imagem = nome;
 
-        await _produtoService.Atualizar(_mapper.Map<Produto>(viewModel));
+            await _produtoService.Atualizar(_mapper.Map<Produto>(viewModel));
+        }
+
 
         return CustomResponse(viewModel);
     }
