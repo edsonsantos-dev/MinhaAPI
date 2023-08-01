@@ -15,8 +15,7 @@ public static class IdentityConfig
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddIdentityCore<IdentityUser>()
-            .AddRoles<IdentityRole>()
+        services.AddIdentity<IdentityUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddErrorDescriber<IdentityMensagensPortugues>()
             .AddDefaultTokenProviders();
