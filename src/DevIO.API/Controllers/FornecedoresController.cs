@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevIO.API.Extensions;
 using DevIO.API.ViewModels;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
@@ -47,6 +48,7 @@ public class FornecedoresController : MainController
     }
 
     [HttpPost]
+    [ClaimsAuthorize("Fornecedor", "Adicionar")]
     public async Task<ActionResult> Adicionar(FornecedorViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -58,6 +60,7 @@ public class FornecedoresController : MainController
     }
 
     [HttpPut]
+    [ClaimsAuthorize("Fornecedor", "Atualizar")]
     public async Task<ActionResult> Atualizar(FornecedorViewModel viewModel)
     {
         if (!ModelState.IsValid)
@@ -69,6 +72,7 @@ public class FornecedoresController : MainController
     }
 
     [HttpDelete]
+    [ClaimsAuthorize("Fornecedor", "Deletar")]
     public async Task<ActionResult> Deletar(Guid id)
     {
         var fornecedor = _mapper.Map<Fornecedor>(await _fornecedorRepository.ObterPorId(id));
