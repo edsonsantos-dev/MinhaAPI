@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.ResolveDependencies();
 builder.AddIdentityConfiguration();
+builder.AddCorsCustom();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +26,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("Development");
 }
 
 app.UseHttpsRedirection();

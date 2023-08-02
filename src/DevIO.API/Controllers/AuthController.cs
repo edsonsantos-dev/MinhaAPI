@@ -86,7 +86,7 @@ public class AuthController : MainController
         return CustomResponse(loginUser);
     }
 
-    private async Task<string> GerarJwt(string email)
+    private async Task<LoginResponseViewModel> GerarJwt(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
         var claims = await _userManager.GetClaimsAsync(user!);
@@ -94,7 +94,7 @@ public class AuthController : MainController
 
         foreach (var userRole in userRoles)
             claims.Add(new Claim("role", userRole));
-        
+
         var identityClaims = new ClaimsIdentity();
         identityClaims.AddClaims(claims);
 
@@ -115,9 +115,30 @@ public class AuthController : MainController
             Subject = identityClaims
         });
 
-        var encondedToken = tokenHandler.WriteToken(token);
+        var encodedToken = tokenHandler.WriteToken(token);
 
-        return encondedToken;
+        var ignoredClaimTypes = new[] { "sub", "email", "jti", "nbf", "iat" };
+
+        var response = new LoginResponseViewModel
+        {
+            AccessToken = encodedToken,
+            ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
+            UserToken = new UserTokenViewModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Claims = claims
+                .Where(c => !ignoredClaimTypes.Contains(c.Type.ToLower()))
+                .Select(c => new ClaimViewModel
+                {
+                    Type = c.Type,
+                    Value = c.Value
+                })
+
+            }
+        };
+
+        return response;
     }
 
     private static long ToUnixEpochDate(DateTime date)
