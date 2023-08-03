@@ -45,6 +45,11 @@ namespace DevIO.Api.Configuration
 
         public static void UseSwaggerCustom(this WebApplication app, IApiVersionDescriptionProvider provider)
         {
+            app.UseStaticFiles();
+
+            if (!app.Environment.IsDevelopment())
+                app.UseMiddleware<SwaggerAuthorizedMiddleware>();
+
             app.UseSwagger();
             app.UseSwaggerUI(
                 options =>
@@ -53,6 +58,7 @@ namespace DevIO.Api.Configuration
                     {
                         options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                     }
+                    options.InjectStylesheet("/swagger-ui/SwaggerDark.css");
                 });
         }
     }
