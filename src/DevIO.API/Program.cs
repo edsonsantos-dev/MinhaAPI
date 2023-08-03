@@ -1,17 +1,20 @@
+using DevIO.Api.Configuration;
 using DevIO.API.Configuration;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddVersionApi();
 builder.ResolveDependencies();
 builder.AddIdentityConfiguration();
 builder.AddCorsCustom();
+builder.AddSwaggerCustom();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddDbContext<MeuDbContext>(options =>
@@ -24,10 +27,16 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.UseCors("Development");
 }
+else
+{
+    app.UseCors("Production");
+}
+
+var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+app.UseSwaggerCustom(provider);
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
