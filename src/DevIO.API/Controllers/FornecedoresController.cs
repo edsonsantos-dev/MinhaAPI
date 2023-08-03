@@ -19,7 +19,8 @@ public class FornecedoresController : MainController
         IMapper mapper,
         INotificador notificador,
         IFornecedorService fornecedorService,
-        IEnderecoRepository enderecoRepository) : base(notificador)
+        IEnderecoRepository enderecoRepository,
+        IUser appUser) : base(notificador, appUser)
     {
         _fornecedorRepository = fornecedorRepository;
         _mapper = mapper;
