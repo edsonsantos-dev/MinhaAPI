@@ -1,5 +1,6 @@
 using DevIO.Api.Configuration;
 using DevIO.API.Configuration;
+using DevIO.API.Extensions;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddLoggin();
 builder.AddVersionApi();
 builder.ResolveDependencies();
 builder.AddIdentityConfiguration();
@@ -25,6 +27,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 var app = builder.Build();
 
+app.UseLoggin();
 if (app.Environment.IsDevelopment())
 {
     app.UseCors("Development");
@@ -34,6 +37,7 @@ else
     app.UseCors("Production");
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 app.UseSwaggerCustom(provider);
